@@ -1,0 +1,34 @@
+name: Basic Pipeline
+
+# Trigger
+on:
+    push:
+        branches: [ main ]
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Descargar el Codigo
+            uses: actions/checkout@v5
+          - name: Build
+            run: echo "Compilando la aplicacion"
+
+    test:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+          - name: Descargar el codigo
+            uses: actions/checkout@v5
+          - name: Verificar que existe el README
+            run: |
+                test -f README.md
+                echo "Tests pasados correctamente"
+
+    deploy:
+        runs-on: ubuntu-latest
+        needs: test
+        steps:
+          - name: Deploy
+            run: echo "Desplegando a produccion"
